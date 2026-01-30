@@ -43,6 +43,7 @@ def load_data():
 
     df = data.copy()
     df["curve"] = (ZN_WEIGHT * df["ZN"]) - (ZT_WEIGHT * df["ZT"])
+    df["valor"] = (2*ZN_WEIGHT * df["ZN"]) - 6*(ZT_WEIGHT * df["ZT"])
     df["tr"] = df["curve"].diff().abs()
     df["atr"] = df["tr"].rolling(20).mean()
     df["ma_z"] = df["curve"].rolling(Z_LOOKBACK).mean()
@@ -89,7 +90,7 @@ if not has_pos:
             signal = "SHORT STEEPENER (-2 ZN / 3 ZT)"
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("Curve Value", f"{today['curve']:.4f}")
+    col1.metric("Curve Value", f"{today['valor']:.4f}")
     col2.metric("Z-Score", f"{today['z']:.2f}")
     col3.metric("ATR", f"{today['atr']:.4f}")
 
@@ -153,3 +154,4 @@ else:
     c2.metric("Stop Loss ($)", f"${stop_exec:,.2f}", help=f"Target: |Z| = {Z_STOP}")
 
     st.write(f"**Live Prices:** ZN: {today['ZN']:,.2f} | ZT: {today['ZT']:,.2f}")
+
